@@ -1,0 +1,138 @@
+<% include ../partial/admin_header.ejs %>
+<!-- Content Header (Page header)-->
+<section class="content-header">
+  <h1>IAP / IAP History </h1>
+</section>
+<!-- Main content-->
+
+<section class="content">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <div class="clearfix"></div>
+      </div>
+
+      <div class="x_content">
+        <br />
+        <form action="/iap/iap_history" method="post"
+              data-parsley-validate class="form-horizontal form-label-left">
+              <!-- let search_form = {
+                user_id: req.body.user_id,
+                start_time: req.body.start_time ? req.body.start_time   : Date.now,
+                end_time : req.body.end_time ? req.body.end_time : Date.now,
+                page_size: req.body.searchPageSize,
+                page: req.body.page || 0
+            } -->
+          <div class="form-group">
+            <label class="control-label col-md-2 col-sm-3 col-xs-4">User_id</label>
+            <div class="col-md-2 col-sm-3 col-xs-4">
+              <input id="searchUserId" name="searchUserId"  class="form-control col-md-5 col-xs-10" type="number" value="<%=search_form.user_id%>">
+            </div>
+
+            <label class="control-label col-md-2 col-sm-3 col-xs-4">Start Time</label>
+            <div class="col-md-2 col-sm-3 col-xs-4">
+              <input id="searchStartTime" name="searchStartTime"  class="form-control col-md-5 col-xs-10" type="date" value="<%=search_form.start_time_inp%>">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-2 col-sm-3 col-xs-4">End Time</label>
+            <div class="col-md-2 col-sm-3 col-xs-4">
+              <input id="searchEndTime" name="searchEndTime"  class="form-control col-md-5 col-xs-10" type="date" value="<%=search_form.end_time_inp || 10%>">
+            </div>
+            <label class="control-label col-md-2 col-sm-3 col-xs-4">Page size</label>
+            <div class="col-md-2 col-sm-3 col-xs-4">
+              <input id="searchPageSize" name="searchPageSize"  class="form-control col-md-5 col-xs-10" type="number" value="<%=search_form.page_size || 10%>">
+            </div>
+            
+            <div class="col-md-6 col-sm-9 col-xs-12">
+              <input type="submit" class="btn btn-success" value="Search"/>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_content">
+        <p class="text-muted font-13 m-b-30">
+        </p>
+        <table id="datatable" class="table table-striped table-bordered" style="width:100%">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>User Id</th>
+              <th>Product name</th>
+               <th>Transaction id</th>
+               <!-- <th>Product id</th> -->
+               <th>Attempt</th>
+               <th>Create time</th>
+              <th>Purchase State</th>
+              <th>Purchase Failure Reason</th>
+              <th>Purchase pack</th>
+              <!-- <th>Time reward</th> -->
+              <th>Reward detail</th>
+	      <th>purchase token</th>
+              <th>store transaction id</th>
+
+            </tr>
+          </thead>
+          <tbody>
+          <% let count = 1; %>
+          <% listIapHistorys.forEach(function(iapHistory) { %>
+            <tr>
+              <td><%=count++%></td>
+              <!-- iap.user_id , iap.transaction_id , iap_details.purchase_state , iap_details.purchase_failure_reason -->
+              
+              <td><%= iapHistory.user_id %></td>
+              <td><%= iapHistory.product_name %></td>
+              <td><%= iapHistory.transaction_id %></td>
+              <!-- <td><%= iapHistory.product_id %></td> -->
+              <td><%= iapHistory.attempt %></td>
+              <td><%= iapHistory.created_time %></td>
+              <td><%= iapHistory.purchase_state %></td>
+              <td><%= iapHistory.purchase_failure_reason %></td>
+              <td><%= iapHistory.purchase_pack %></td> 
+              <!-- <td><%= iapHistory.time_reward %></td>  -->
+              <td><%= iapHistory.reward_detail %></td>
+	      <td>
+                <button class="btn btn-info btn-sm toggle-token">Show Token</button>
+                <span class="token-data" style="display:none;"><%= iapHistory.purchase_token %></span>
+              </td>
+              <td><%= iapHistory.store_transaction_id %></td> 
+            </tr>
+          <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+ 
+
+<% include ../partial/admin_footer.ejs %>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Get all the toggle-token buttons
+    var toggleButtons = document.querySelectorAll('.toggle-token');
+
+    toggleButtons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        // Find the sibling span with the token data
+        var tokenData = this.nextElementSibling;
+
+        // Toggle visibility
+        if (tokenData.style.display === 'none') {
+          tokenData.style.display = 'inline';
+          this.textContent = 'Hide Token';
+        } else {
+          tokenData.style.display = 'none';
+          this.textContent = 'Show Token';
+        }
+      });
+    });
+  });
+</script>

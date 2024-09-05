@@ -1,0 +1,572 @@
+<% include ../partial/admin_header.ejs %>
+<!-- Content Header (Page header)-->
+
+<link href="/jsoneditor/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
+<style>
+    .required {
+        color: red;
+        padding-left:2px ;
+    }
+</style>
+<script src="/jsoneditor/dist/jsoneditor.min.js"></script>
+<section class="content-header">
+  <h1>User / Send Email Selected </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>User</a></li>
+    <li class="active">Search</li>
+  </ol>
+</section>
+
+
+
+<section class="content">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <div class="clearfix"></div>
+        </div>
+        <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Send Email Selected</h3>
+            </div>
+            <div class="x_content">
+            <br />
+                        
+                <form action="/users/email_send" method="post" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+
+                    <input type="hidden" value="0" id="emailToNumberUser" name="emailToNumberUser">
+                    <div id = "emailToMulti" >
+                      <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-3 col-xs-4">User Id </label>
+        
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                          <textarea  class="form-control col-md-5 col-xs-10" required="required"  rows="6" id = "edt_IdMulti" name="edt_IdMulti" value=""></textarea>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label col-md-2 col-sm-3 col-xs-4">Email type</label>
+
+                    <div class="col-md-3 col-sm-9 col-xs-12">
+                        <select class="form-control" id="edt_MessageType" name="edt_MessageType" onchange="emailTypeChanged()">
+                        <option value="0">Normal information</option>
+                        <option value="1">Gift add data</option>
+                        <option value="2">Important information</option>
+                        <option value="3">Force set data</option>
+                        <option value="4">Auto force set data</option>
+                        </select>
+                    </div>
+                    <label class="control-label col-md-2 col-sm-3 col-xs-4">Send With Name</label>
+
+                    <div class="col-md-4 col-sm-9 col-xs-12">
+                        <input  class="form-control col-md-5 col-xs-10"  type="text" id = "edt_email_send_name" name="edt_email_send_name" value="Crush">
+                    </div>
+                    </div>
+                
+
+                    <div class="form-group">
+                    <label class="control-label col-md-2 col-sm-3 col-xs-4">Expire Time<span class="required"> *</span></label>
+                    <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input  class="form-control col-md-5 col-xs-10"  type="date" id = "edt_expire_time" name="edt_expire_time" value=""
+                        > <!-- noi dung text: val -->
+                    </div>
+                    </div>
+
+
+                    <div class = "email_gift_value" hidden="true">
+
+                      <div class="form-group">
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Gem</label>
+  
+                          <div class="col-md-3 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10" required  type="text" id = "edt_email_Gem" name="edt_email_Gem" value="0">
+                          </div>
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Infinite Heart</label>
+  
+                          <div class="col-md-4 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10"  required type="text" id = "edt_email_infinite_heart" name="edt_email_infinite_heart" value="0">
+                          </div>
+                      </div>
+  
+  
+                      <div class="form-group">
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Boost Happy Hour</label>
+  
+                          <div class="col-md-3 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10"  required type="text" id = "edt_email_boost_ice" name="edt_email_boost_ice" value="0">
+                          </div>
+  
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Boost Lollipop</label>
+  
+                          <div class="col-md-4 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10" required="required" required type="text" id = "edt_email_boost_cake" name="edt_email_boost_cake" value="0">
+                          </div>
+                      </div>
+  
+                      <div class="form-group">
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Boost Groceri</label>
+  
+                          <div class="col-md-3 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10"  required type="text" id = "edt_email_boost_serve" name="edt_email_boost_serve" value="0">
+                          </div>
+  
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Boost Teflon</label>
+  
+                          <div class="col-md-4 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10" required="required" required type="text" id = "edt_email_boost_pan" name="edt_email_boost_pan" value="0">
+                          </div>
+                      </div>
+  
+  
+                      <div class="form-group">
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Boost Money Maker</label>
+  
+                          <div class="col-md-3 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10"  required type="text" id = "edt_email_boost_x2" name="edt_email_boost_x2" value="0">
+                          </div>
+  
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Boost Flash Fryer</label>
+  
+                          <div class="col-md-4 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10" required="required" required type="text" id = "edt_email_boost_time" name="edt_email_boost_time" value="0">
+                          </div>
+                      </div>
+  
+                      <div class="form-group">
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Need More Time</label>
+  
+                          <div class="col-md-3 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10"  required type="text" id = "edt_email_nm_time" name="edt_email_nm_time" value="0">
+                          </div>
+  
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Need More Cus</label>
+  
+                          <div class="col-md-4 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10" required="required" required type="text" id = "edt_email_nm_cus" name="edt_email_nm_cus" value="0">
+                          </div>
+  
+                      </div>
+  
+                      <div class="form-group">
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Boost Combo</label>
+  
+                          <div class="col-md-3 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10"  required type="text" id = "edt_email_combo" name="edt_email_combo" value="0">
+                          </div>
+  
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Boost Helping Hand</label>
+  
+                          <div class="col-md-4 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10" required="required" required type="text" id = "edt_email_happy_hand" name="edt_email_happy_hand" value="0">
+                          </div>
+                      </div>
+  
+                      <div class="form-group">
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Money Maker Unlimit</label>
+  
+                          <div class="col-md-3 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10"  required type="text" id = "edt_email_mm_unlimit" name="edt_email_mm_unlimit" value="0">
+                          </div>
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Need Second Chance</label>
+  
+                          <div class="col-md-4 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10" required="required" required type="text" id = "edt_email_nsc" name="edt_email_nsc" value="0">
+                          </div>
+                          
+                      </div>
+  
+                      <div class="form-group">
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Flash Fry Unlimit</label>
+  
+                          <div class="col-md-3 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10"  required type="text" id = "edt_email_ff_unlimit" name="edt_email_ff_unlimit" value="0">
+                          </div>
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Telfon Unlimit</label>
+  
+                          <div class="col-md-4 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10" required="required" required type="text" id = "edt_email_telfon_unlimit" name="edt_email_telfon_unlimit" value="0">
+                          </div>
+                      </div>
+  
+                      <div class="form-group">
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">COMBO UNLIMIT</label>
+  
+                          <div class="col-md-3 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10"  required type="text" id = "edt_email_ff_combo_unlimit" name="edt_email_ff_combo_unlimit" value="0">
+                          </div>
+  
+                          <label class="control-label col-md-2 col-sm-3 col-xs-4">Helping Hand Unlimit</label>
+  
+                          <div class="col-md-4 col-sm-9 col-xs-12">
+                          <input  class="form-control only_number  col-md-5 col-xs-10"  required type="text" id = "edt_email_helping_hand" name="edt_email_helping_hand" value="0">
+                          </div>
+  
+                      </div>
+                  
+                      <div class="form-group" style="margin-left: 17%;">
+                          
+                          <table>
+                          <thead>
+                              <tr>
+                                  <th>Rest</th>
+                                  <th>Coin</th>
+                                  <th>Key</th>
+                              <th  class = "email_force_set_value">Level</th>
+                              <th class = "email_force_set_value">Tier ( 0 -3)</th>
+                              <th class = "email_force_set_value">Unlocked ( 0 / 1) </th>
+                              <th class = "email_force_set_value">Total Stars</th>
+                              <!-- <th class = "email_force_set_value">Key 2</th> -->
+                              </tr>
+                          </thead>
+                          <tbody>
+  
+                          <% var list_rest = [
+                              {"id":1,"name":"French Toast", "level" : 20},
+                              {"id":4,"name":"Dream Deli", "level" : 40},
+                              {"id":6,"name":"Salty Taverna (SeaFood)", "level" : 40},
+                              {"id":8,"name":"Party Parlor (IceCream)", "level" : 40},
+                              {"id":2,"name":"Rockin' Diner (Burger)", "level" : 40},
+                              {"id":7,"name":"Crazy Cantina (Mexican)", "level" : 40},
+                              {"id":10,"name":"Donut Den (Donut)", "level" : 40},
+                              {"id":11,"name":"Indian", "level" : 40},
+                              <!-- {"id":3,"name":"CakeShop", "level" : 40}, -->
+                      
+                              <!-- {"id":5,"name":"Sushi", "level" : 10}, -->
+                              {"id":9,"name":"Pizza", "level" : 40},
+                              {"id":3,"name":"CakeShop", "level" : 40},
+                              {"id":12,"name":"Canadian Treats", "level" : 40},
+                              {"id":13,"name":"What The Pho", "level" : 40},
+                              {"id":14,"name":"Peru", "level" : 40},
+                              {"id":15,"name":"Turkish", "level" : 40},
+                              {"id":16,"name":"Jungle", "level" : 40},
+                              {"id":17,"name":"Iceland", "level" : 40},
+                              {"id":18,"name":"UK (English Breakfast)", "level" : 40},
+                              {"id":19,"name":"Egypt (Egyptian Princess)", "level" : 40},
+                              {"id":20,"name":"Hospital (Hospital Care)", "level" : 40},
+                              {"id":21,"name":"Russian (Creamy Borsh)", "level" : 40},
+                              {"id":22,"name":"Japan (Sushi Bar)", "level" : 40},
+                              {"id":23,"name":"Pirates (Pirate’s Treasure)", "level" : 40},
+                              {"id":24,"name":"AirPlane (Flying Away)", "level" : 40},
+                              {"id":25,"name":"Jamaica (Jamaican Smile)", "level" : 40},
+                              {"id":26,"name":"Prison Break","level":40},
+                              {"id":27,"name":"Brazil (Coffee House)","level":40},
+                              {"id":28,"name":"Hola Spain","level":40},
+                              {"id":29,"name":"Champion's Meal","level":40},
+                              {"id":30,"name":"Candy","level":40},
+                              {"id":31,"name":"Chinatown","level":40},
+                              {"id":32,"name":"Deutch Delights","level":40},
+                              {"id":33,"name":"Persian","level":40},
+                          ];
+  
+                          list_rest.forEach(function(restInfo) {
+                          %>
+                              <tr>
+                              <td>
+                                  <b><%= restInfo.id %>. <%= restInfo.name %></b>
+                              </td>
+                              <td>
+                                  <input  class = "input_number_forceset only_number"   required type="text" id = "edt_email_Coin<%= restInfo.id %>" name="edt_email_Coin<%= restInfo.id %>" value="0">
+                              </td>
+                              <td>
+                                  <input  class = "input_number_forceset only_number"   required type="text" id = "edt_email_key_<%= restInfo.id %>" name="edt_email_key_<%= restInfo.id %>" value="0">
+                              </td>
+                              <td>
+                                  <input  class = "email_force_set_value input_number_forceset only_number"  required type="text" id = "edt_email_levels_<%= restInfo.id %>" name="edt_email_levels_<%= restInfo.id %>" value="0">
+                              </td>
+                              <td>
+                                  <input  class = "email_force_set_value input_number_forceset only_number"  required type="text" id = "edt_email_tier_<%= restInfo.id %>" name="edt_email_tier_<%= restInfo.id %>" value="0">
+                              </td>
+                              <td>
+                                  <input  class = "email_force_set_value input_number_forceset only_number"   required type="text" id = "edt_email_unlock_state_<%= restInfo.id %>" name="edt_email_unlock_state_<%= restInfo.id %>" value="0">
+                              </td>
+                              <td>
+                                  <input  class = "email_force_set_value input_number_forceset only_number"   required type="text" id = "edt_email_total_stars_<%= restInfo.id %>" name="edt_email_total_stars_<%= restInfo.id %>" value="0">
+                              </td>
+                              <!-- <td>
+                                  <input  class = "email_force_set_value input_number_forceset only_number"   required type="text" id = "edt_email_key_<%= restInfo.id %>" name="edt_email_key_<%= restInfo.id %>" value="0">
+                              </td> -->
+                              
+                              </tr>
+                          <% });%>
+  
+                          </tbody>
+                          </table>
+  
+                      </div>
+  
+                      </div>
+
+                    <div class="form-group">
+                    <label class="control-label col-md-2 col-sm-3 col-xs-4">Title<span class="required">*</span></label>
+                    <div class="col-md-9 col-sm-9 col-xs-12">
+                        <input  class="form-control col-md-5 col-xs-10" type="text" id = "edt_Title" name="edt_Title" value=""> <!-- noi dung text: val -->
+                    </div>
+                    </div>
+
+                    <div class="form-group">
+                    <label class="control-label col-md-2 col-sm-3 col-xs-4">Content<span class="required">*</span></label>
+                    <div class="col-md-9 col-sm-9 col-xs-12">
+                        <textarea  class="form-control col-md-5 col-xs-10" rows="6" id = "edt_Content" name="edt_Content" value=""></textarea>
+                    </div>
+                    </div>
+                    
+                    <div class="form-group">
+                    <label class="control-label col-md-2 col-sm-3 col-xs-4" id ="label_PN" >PN </label>
+                    <div class="col-md-9 col-sm-9 col-xs-12">
+                        <textarea  class="form-control col-md-5 col-xs-10" rows="6" id = "edt_PN" name="edt_PN" value="">You have an important message waiting for you.</textarea>
+                    </div>
+                    </div>
+                    <div class="form-group" id = "add_money_spen" >
+                      <div class="col-md-2">
+
+                      </div>
+                      <div class="col-md-3 col-sm-8 col-xs-12">
+                        <label >Disable Interstitial</label>
+                        <div >
+                          <select class="form-control" id="disable_interstitial" name="disable_interstitial" onchange="emailActionChanged()">
+                            <option value="-1">None</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-sm-8 col-xs-12">
+                        <label >Money Spent</label>
+                        <div >
+                          <input class="form-control" type="number"  placeholder="Money Spent" name="total_money_spent" />
+                        </div>
+                      </div>
+                     <div class="col-md-3 col-sm-8 col-xs-12">
+                      <label >Total Buy In App</label>
+                      <div >
+                        <input class="form-control" type="number" placeholder="Total Buy In App" name="buy_in_app_count"/>
+                      </div>
+                     </div>
+                      
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label col-md-2 col-sm-3 col-xs-4 " id="label_check_PN"  >Send PN<span class="required">?</span></label>
+                    <div class="col-md-9 col-sm-9 col-xs-12" style="padding-top:6px">
+                        <input class="form-check-input " type="checkbox" value="" id="check_PN" checked>
+                    </div>
+                    </div>
+                    
+                   
+                    
+                    <div class="modal-footer">
+                  
+                    <input type="button" class="btn btn-primary" value="Send" onclick="btnDoSendEmail()">
+                    </div>
+                </form>
+            </div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/CustomzeValidate.js"></script>
+    <script type="text/javascript">
+   //   $('.email_gift_value').hide(); 
+         
+        var emailTypeChanged = function(){
+    var currType = $('#edt_MessageType').val();
+    if(currType==1 ){
+      $('.email_gift_value').show();
+      $('.email_force_set_value').hide();
+      $('#label_PN').show();
+      $('#edt_PN').show();
+      $('#label_check_PN').show();
+      $('#check_PN').show();
+      reset_add_gift_value();
+
+    } else
+    if(currType==3 ){
+      $('.email_gift_value').show();
+      $('.email_force_set_value').show();
+      $('#label_PN').show();
+      $('#edt_PN').show();
+      $('#label_check_PN').show();
+      $('#check_PN').show();
+      reset_force_set_value();
+    }
+    else if(currType==4){
+      $('.email_gift_value').show();
+      $('.email_force_set_value').show();
+      $('#label_PN').hide();
+      $('#edt_PN').hide();
+      $('#label_check_PN').hide();
+      $('#check_PN').hide();
+      $('#edt_PN').val("");
+      reset_force_set_value();
+    }
+    else {
+      $('.email_gift_value').hide();
+      $('.email_force_set_value').hide();
+      $('#label_PN').show();
+      $('#edt_PN').show();
+      $('#label_check_PN').show();
+      $('#check_PN').show();
+    }
+    $("label.error").hide();
+  }
+
+  emailTypeChanged();
+  var reset_force_set_value = function(){
+    $("#edt_email_Gem").val(-1);
+
+    for(var j = 1;j<=100;j++){
+      $("#edt_email_Coin"+j).val(-1);
+
+    }
+    $("#edt_email_boost_ice").val(-1);
+    $("#edt_email_boost_cake").val(-1);
+    $("#edt_email_boost_serve").val(-1);
+    $("#edt_email_boost_pan").val(-1);
+    $("#edt_email_boost_x2").val(-1);
+    $("#edt_email_boost_time").val(-1);
+    $("#edt_email_infinite_heart").val(-1);
+    $("#edt_email_nm_time").val(-1);
+    $("#edt_email_nm_cus").val(-1);
+    $("#edt_email_combo").val(-1);
+    $("#edt_email_happy_hand").val(-1);
+    $("#edt_email_mm_unlimit").val(-1);
+    $("#edt_email_telfon_unlimit").val(-1);
+    $("#edt_email_ff_unlimit").val(-1);
+    $("#edt_email_nsc").val(-1);
+    $("#edt_email_ff_combo_unlimit").val(-1);
+    $("#edt_email_helping_hand").val(-1);
+
+    for(var i = 1; i<=100; i++){
+      $("#edt_email_levels_"+i).val(-1);
+      $("#edt_email_tier_"+i).val(-1);
+      $("#edt_email_unlock_state_"+i).val(i==1?1:-1);
+      $("#edt_email_key_"+i).val(-1);
+      $("#edt_email_total_stars_"+i).val(-1);
+      
+    }
+
+  }
+
+  var reset_add_gift_value= function(){
+    $("#edt_email_Gem").val(0);
+
+
+    for(var j = 1;j<=100;j++){
+      $("#edt_email_Coin"+j).val(0);
+
+    }
+
+    $("#edt_email_boost_ice").val(0);
+    $("#edt_email_boost_cake").val(0);
+    $("#edt_email_boost_serve").val(0);
+    $("#edt_email_boost_pan").val(0);
+    $("#edt_email_boost_x2").val(0);
+    $("#edt_email_boost_time").val(0);
+    $("#edt_email_infinite_heart").val(0);
+    $("#edt_email_nm_time").val(0);
+    $("#edt_email_nm_cus").val(0);
+    $("#edt_email_combo").val(0);
+    $("#edt_email_happy_hand").val(0);
+    $("#edt_email_mm_unlimit").val(0);
+    $("#edt_email_telfon_unlimit").val(0);
+    $("#edt_email_ff_unlimit").val(0);
+    $("#edt_email_nsc").val(0);
+    $("#edt_email_ff_combo_unlimit").val(0);
+    $("#edt_email_helping_hand").val(0);
+
+    for(var i = 1; i<=100; i++){
+      $("#edt_email_levels_"+i).val(0);
+      $("#edt_email_tier_"+i).val(0);
+      $("#edt_email_unlock_state_"+i).val(0);
+      $("#edt_email_key_"+i).val(0);
+    
+    }
+  }
+
+  var reset_force_set_value = function(){
+    $("#edt_email_Gem").val(-1);
+
+    for(var j = 1;j<=100;j++){
+      $("#edt_email_Coin"+j).val(-1);
+
+    }
+    $("#edt_email_boost_ice").val(-1);
+    $("#edt_email_boost_cake").val(-1);
+    $("#edt_email_boost_serve").val(-1);
+    $("#edt_email_boost_pan").val(-1);
+    $("#edt_email_boost_x2").val(-1);
+    $("#edt_email_boost_time").val(-1);
+    $("#edt_email_infinite_heart").val(-1);
+    $("#edt_email_nm_time").val(-1);
+    $("#edt_email_nm_cus").val(-1);
+    $("#edt_email_combo").val(-1);
+    $("#edt_email_happy_hand").val(-1);
+    $("#edt_email_mm_unlimit").val(-1);
+    $("#edt_email_telfon_unlimit").val(-1);
+    $("#edt_email_ff_unlimit").val(-1);
+    $("#edt_email_nsc").val(-1);
+    $("#edt_email_ff_combo_unlimit").val(-1);
+    $("#edt_email_helping_hand").val(-1);
+
+    for(var i = 1; i<=100; i++){
+      $("#edt_email_levels_"+i).val(-1);
+      $("#edt_email_tier_"+i).val(-1);
+      $("#edt_email_unlock_state_"+i).val(i==1?1:-1);
+      $("#edt_email_key_"+i).val(-1);
+      $("#edt_email_total_stars_"+i).val(-1);
+      
+    }
+
+  }
+  // send email
+  var btnDoSendEmail = function()
+    {
+      let is_valid =  validateModel.formEmail("#demo-form2");
+      if (is_valid) {
+        $.ajax({
+            type: "POST",
+            url: '/users/email_send',
+            data: $( "#demo-form2" ).serialize(),
+            success: function(dataResult,textStatus,jqXHR){
+                  //alert(dataResult.msg||textStatus||"Error");
+
+              if(dataResult.status ==0){
+                
+                alert(dataResult.msg);
+                refresh_data();
+              }
+              else
+              {
+                alert(dataResult.msg|| "Error");
+              }
+            },
+            dataType: 'json'
+          });
+        }else{
+          alert("Please enter a valid number.")
+        } 
+    
+   
+  }
+  var edtPN = document.getElementById("edt_PN");
+  var refresh_data = function(){
+    $('.email_gift_value').hide();
+    $("#edt_email_send_name ,#edt_expire_time ,#edt_Content ,#edt_Title").val("");
+    edtPN.value = "You have an important message waiting for you.";
+  }
+ 
+  $('#check_PN').change(function() {
+        if(this.checked != true)
+        {
+          // alert("false");
+          edtPN.value = "";
+        }
+        else if(this.checked = true  )
+        {
+          // alert("true");
+          if(edtPN.value === null || edtPN.value === ""){
+            edtPN.value = "You have an important message waiting for you.";
+          }
+        } 
+      });
+
+    </script>
+    <% include ../partial/admin_footer.ejs %>

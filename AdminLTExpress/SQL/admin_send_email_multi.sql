@@ -1,0 +1,53 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `admin_send_email_multi`(in V_IN_ADMIN_ID int,
+in V_IN_USER_IDS text,
+in V_IN_TITLE varchar(2000)  ,
+in V_IN_CONTENT text  ,
+in V_IN_SEND_BY varchar(100),
+in V_IN_GIFT text,
+in V_IN_EMAIL_TYPE int,
+in V_IN_TIME_EXPIRE datetime,
+in V_IN_NOTIFICATION text,
+in V_IN_DATA_EXT LONGTEXT)
+LB_SEND:BEGIN
+DECLARE x_index int;
+DECLARE x_user_id int;
+DECLARE x_onesignal_id varchar(100);
+DECLARE x_one_signal_id_list longtext;
+DECLARE x_data longtext;
+DECLARE x_notification text;
+DECLARE x_additional_data text;
+set x_one_signal_id_list = "[]";
+set x_data = "[]";
+set x_index:= 0;
+set x_notification = JSON_OBJECT("en",V_IN_NOTIFICATION);
+set x_additional_data = JSON_OBJECT("action","OPEN_MAIL_BOX","data","{}");
+
+while x_index < JSON_LENGTH(V_IN_USER_IDS) do
+	set x_user_id = JSON_EXTRACT(V_IN_USER_IDS, concat('$[',x_index,']'));
+
+	if (x_user_id = '-1' ) then
+		 call admin_send_email_all(V_IN_ADMIN_ID,x_user_id,V_IN_TITLE,V_IN_CONTENT,V_IN_SEND_BY,V_IN_GIFT,V_IN_EMAIL_TYPE,V_IN_TIME_EXPIRE,V_IN_DATA_EXT,V_IN_NOTIFICATION);
+	else 
+			call admin_send_email(V_IN_ADMIN_ID,x_user_id,V_IN_TITLE,V_IN_CONTENT,V_IN_SEND_BY,V_IN_GIFT,V_IN_EMAIL_TYPE,V_IN_TIME_EXPIRE,V_IN_DATA_EXT);
+		
+		select JSON_EXTRACT(other_info,"$.onesignal_user_id") into x_onesignal_id from user_recently where id = x_user_id;
+
+		set x_one_signal_id_list := JSON_MERGE_PRESERVE(x_one_signal_id_list,x_onesignal_id);
+	end if;
+	
+	set x_index:= x_index+1;
+end while;
+
+
+set x_data := REPLACE(REPLACE(REPLACE(x_one_signal_id_list,'"", ',''), '[""]','null'),', ""','');
+if(V_IN_NOTIFICATION is null or V_IN_NOTIFICATION = "") then
+select 0 status,"Send email success" msg,"{}" data;
+	leave LB_SEND;
+end if;
+
+insert into push_schedule(include_player_ids,contents,`data`) values (x_data,x_notification,x_additional_data);
+call debug_log_insert(x_notification);
+select 0 status,"Send email success" msg,"{}" data;
+commit;
+	
+END

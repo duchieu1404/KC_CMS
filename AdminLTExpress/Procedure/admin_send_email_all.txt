@@ -1,0 +1,19 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `admin_send_email_all`(in V_IN_ADMIN_ID int,
+in V_IN_USER_ID int,
+in V_IN_TITLE varchar(2000),
+in V_IN_CONTENT text,
+in V_IN_SEND_BY varchar(100),
+in V_IN_GIFT text,
+in V_IN_EMAIL_TYPE int,
+in V_IN_TIME_EXPIRE datetime,
+in V_IN_DATA_EXT longtext
+)
+BEGIN
+
+
+  
+	insert into send_email_for_all_user(user_id,title,content,time_send,sent_by,gift,expire_time,email_type,data_etx,send_status)
+	values(V_IN_USER_ID,V_IN_TITLE,V_IN_CONTENT,now(),V_IN_SEND_BY,if(V_IN_EMAIL_TYPE = 1 or V_IN_EMAIL_TYPE = 3 or V_IN_EMAIL_TYPE = 4 ,V_IN_GIFT,'{}'),V_IN_TIME_EXPIRE,V_IN_EMAIL_TYPE,V_IN_DATA_EXT,0);
+	select 0 status,"Send email success" msg,"{}" data;
+	commit;
+END

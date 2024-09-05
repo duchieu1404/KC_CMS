@@ -1,0 +1,86 @@
+<% include ../partial/admin_header.ejs %>
+<!-- Content Header (Page header)-->
+
+<link href="/jsoneditor/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
+<style>
+    .required {
+        color: red;
+        padding-left:2px ;
+    }
+</style>
+<script src="/jsoneditor/dist/jsoneditor.min.js"></script>
+<section class="content-header">
+  <h1>User / UnBanned  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>User</a></li>
+    <li class="active">Search</li>
+  </ol>
+</section>
+<section class="content">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <div class="clearfix"></div>
+        </div>
+        <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">UnBanned user</h3>
+            </div>
+            <div class="x_content">
+            <br />
+                        
+                <form action="/users/ban_user" method="post" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+
+                    <input type="hidden" value="0" id="emailToNumberUser" name="emailToNumberUser">
+                    <div id = "emailToMulti" >
+                      <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-3 col-xs-4">User Id </label>
+        
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                          <input  class="form-control col-md-5 col-xs-10"  type="text" id = "delete_edt_Id" name="delete_edt_Id" >
+                        </div>
+                      </div>
+                    </div> 
+                     
+                    <div class="modal-footer">
+                  
+                    <input type="button" class="btn btn-danger" value="UnBanned" onclick="btnDoUnbanned()">
+                    </div>
+                </form>
+            </div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/CustomzeValidate.js"></script>
+    <script type="text/javascript">
+   
+  // send email
+  var btnDoUnbanned = function()
+    {
+      let is_valid =  validateModel.formEmail("#demo-form2");
+      if (is_valid) {
+        $.ajax({
+            type: "POST",
+            url: '/users/unban_user',
+            data: $( "#demo-form2" ).serialize(),
+            success: function(dataResult,textStatus,jqXHR){ 
+
+              if(dataResult.status ==0){ 
+                alert(dataResult.msg);
+                $("#edt_user_id").val('');
+              }
+              else
+              {
+                alert(dataResult.msg|| "Error");
+              }
+            },
+            dataType: 'json'
+          });
+        }else{
+          alert("Please enter a valid number.")
+        } 
+    
+   
+  }
+    </script>
+    <% include ../partial/admin_footer.ejs %>

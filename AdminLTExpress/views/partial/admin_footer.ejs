@@ -1,0 +1,27 @@
+</aside>
+<!-- /.right-side-->
+</div>
+<!-- ./wrapper-->
+
+<!-- /.content-->
+
+<script>
+    $(document).ready(function() {
+        /*Add table no responsive  */
+        let selector = $('#datatable');
+        let classResponsive = selector.hasClass("data-responsive");
+        var table = selector.DataTable({
+            responsive: classResponsive ? true : false,
+            pageLength: 100,
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ]
+        });
+        table.buttons().container().appendTo( $('.col-sm-6:eq(0)', table.table().container() ) );
+    });
+</script>
+</body>
+</html>

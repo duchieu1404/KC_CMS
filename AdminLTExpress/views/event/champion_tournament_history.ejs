@@ -1,0 +1,169 @@
+<% include ../partial/admin_header.ejs %>
+<!-- Content Header (Page header)-->
+<section class="content-header">
+  <h1>Champion Event History</h1>
+</section>
+<!-- Main content-->
+
+<section class="content">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <div class="clearfix"></div>
+      </div>
+
+      <div class="x_content">
+        <br />
+        <div class="form-group">
+          <label class="control-label col-md-2 col-sm-3 col-xs-4">User Id</label>
+          <div class="col-md-2 col-sm-3 col-xs-4">
+            <input id="userId" name="userId" placeholder="User id" class="form-control col-md-5 col-xs-10" type="number">
+          </div>
+
+          <label class="control-label col-md-2 col-sm-3 col-xs-4">Event Id</label>
+          <div class="col-md-2 col-sm-3 col-xs-4">
+            <input id="eventId" name="eventId" placeholder="Event id" class="form-control col-md-5 col-xs-10" type="number">
+          </div>
+          <button type="button" class="btn btn-info searchButton" id="searchButtonSearch">Search</button>
+          <button type="button" class="btn btn-warning searchButton" id="searchButtonClear">Clear</button>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_title">
+              <div class="clearfix"></div>
+            </div>
+            <div class="box box-info">
+              <div class="box-header with-border">
+                <h3 class="box-title">Event Info</h3>
+              </div>
+              <div class="row" style="margin-left: 10px;">
+                <div class="col-md-4">
+                  <label for="">Rank:</label>
+                  <span id="Rank"></span>
+                </div>
+                <div class="col-md-4">
+                  <label for="">Total Score:</label>
+                  <span id="totalScore"></span>
+                </div>
+                <div class="col-md-4">
+                  <label for="">Is claim:</label>
+                  <span id="is_claim"></span>
+                </div>
+                <div class="col-md-12">
+                  <label for="">Reward:</label>
+                  <span id="reward"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_content">
+        <p class="text-muted font-13 m-b-30"></p>
+        <table id="datatableChampitonHistorys" class="table table-striped table-bordered" style="width:100%">
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Score</th>
+              <th>Create Time</th>
+              <th>Group ID</th>
+              <th>Total Score</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<% include ../partial/admin_footer.ejs %> 
+
+<script type="text/javascript">
+  // Hàm chuyển đổi timestamp sang định dạng yyyy-MM-dd hh:mm:ss
+  function formatTimestamp(timestamp) {
+    var date = new Date(timestamp);
+    var year = date.getFullYear();
+    var month = ("0" + (date.getMonth() + 1)).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+    var hours = ("0" + date.getHours()).slice(-2);
+    var minutes = ("0" + date.getMinutes()).slice(-2);
+    var seconds = ("0" + date.getSeconds()).slice(-2);
+    return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+  }
+
+  $('#searchButtonSearch').on('click', function() {
+    // Reload the DataTable with new search parameters
+    dataTable.ajax.reload();
+  });
+
+  $('#searchButtonClear').on('click', function() {
+    $("#eventId").val("");
+    $("#userId").val("");
+    $("#Rank").html("");
+    $("#totalScore").html("");
+    $("#BestScore").html("");
+    $("#is_claim").html("");
+    $("#reward").html("");
+    dataTable.ajax.reload();
+  });
+
+  var dataTable = $('#datatableChampitonHistorys').DataTable({
+    serverSide: true,
+    ajax: {
+        url: '/event/champion_tournament_history', // Đường dẫn đến script PHP server-side
+        type: "POST",
+        data: function(d) {
+            d.event_id = $("#eventId").val() ?  Number.parseInt($("#eventId").val()) : 0 ;
+            d.user_id=  $("#userId").val() ?  Number.parseInt($("#userId").val()) : 0;
+            d.size = d.length;
+            d.page = d.start / d.length + 1;
+        },
+      dataSrc: function(json) {
+        // Tính toán số trang dựa trên tổng số bản ghi và số bản ghi trên mỗi trang (length)
+        var totalPages = Math.ceil(json.totalItems / json.length);
+        json.totalPages = totalPages;
+        json.currentPage = json.start / json.length + 1;
+        if (json.eventInfo) {
+          let eventinfo = json.eventInfo;
+          $("#totalScore").html(eventinfo.score);
+          $("#totalScore").html(eventinfo.score);
+          $("#is_claim").html(eventinfo.is_claimed ? "YES" : "NO");
+          $("#reward").html(eventinfo.reward_detail);
+          $("#Rank").html(eventinfo.rank);
+        } else {
+          $("#Rank").html("");
+          $("#totalScore").html("");
+          $("#BestScore").html("");
+          $("#is_claim").html("");
+          $("#reward").html("");
+        }
+        return json.dataSources; // Trả về mảng chứa dữ liệu để DataTables hiển thị
+      }
+    },
+    columns: [
+      {"data": "userId"},
+      {"data": "score"},
+      {
+        "data": "create_time",
+        "render": function(data, type, row) {
+          return formatTimestamp(data);
+        }
+      },
+      {"data": "group_id"},
+      {"data": "total_score"}
+    ],
+    paging: true,
+    pageLength: 10, // Số lượng bản ghi trên mỗi trang
+    lengthMenu: [10, 25, 50, 100], // Menu cho phép chọn số lượng bản ghi trên mỗi trang
+    processing: true,
+    serverSide: true
+  });
+</script>
