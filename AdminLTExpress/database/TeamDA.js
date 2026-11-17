@@ -87,10 +87,16 @@ TeamDA.prototype.list_verify_iap_log = function (data, callback) {
     return this.dbModel.query_callback_array("call admin_list_verify_iap_log(?,?,?,?,?)", [data.user_id,data.start_time,data.end_time,data.page_size,data.page], callback);
 }
 /** end for team leaderboard */
+
 TeamDA.prototype.update_team_score= function (data, callback) {
     return this.dbModel.query_callback_object("call admin_team_update_team_score(?, ?)", [
         data.team_id,
         data.score,
     ], callback);
+}
+
+TeamDA.prototype.list_verify_iap_log = function (data, callback) {
+    console.log("data call ", data);
+    return this.dbModel.query_callback_array("call admin_list_verify_iap_log(?,?,?,?,?)", [data.user_id,data.start_time,data.end_time,data.page_size,data.page], callback);
 }
 module.exports = TeamDA;

@@ -619,3 +619,92 @@ ConfigDA.prototype.admin_lava_quest_delete = function (data, callback) {
         data.event_id
     ], callback);
 }
+
+// event_royal_pass
+ConfigDA.prototype.admin_event_royal_pass_get_all = function (data, callback) {
+    return this.dbModel.query_callback_array("call admin_royal_pass_get_all()", [], callback);
+}
+
+ConfigDA.prototype.admin_royal_pass_save = function (data, callback) {
+    return this.dbModel.query_callback_array("call admin_royal_pass_save(?,?,?,?,?,?,?,?,?)", [
+        data.id,
+        data.status,
+        data.time_from,
+        data.time_to,
+        data.time_show_from,
+        data.time_show_to,
+        data.key_bundle,
+        data.user_ids,
+        data.version
+    ], callback);
+}
+
+ConfigDA.prototype.admin_royal_pass_delete = function (data, callback) {
+    return this.dbModel.query_callback_object("call admin_royal_pass_delete(?,?)", [
+        data.admin_id || 0,
+        data.event_id
+    ], callback);
+}
+
+ConfigDA.prototype.list_change_logs = function (data, callback) {
+    return this.dbModel.query_callback_array("call admin_change_log_event_royal_pass(?,?,?)", [data.user_id,data.page_size,data.page], callback);
+}
+
+// event team treasure
+ConfigDA.prototype.admin_team_treasure_get_all = function (data, callback) {
+    return this.dbModel.query_callback_array("call admin_team_treasure_get_all()", [], callback);
+}
+ConfigDA.prototype.admin_team_treasure_save = function (data, callback) {
+    return this.dbModel.query_callback_array("call admin_team_treasure_save(?,?,?,?,?,?,?,?,?)", [
+        data.id,
+        data.status,
+        data.time_from,
+        data.time_to,
+        data.count_by,
+        data.prev_event_id,
+        data.time_show_from,
+        data.time_show_to,
+        data.edt_evt_copy,
+        // data.evt_popup_copy
+    ], callback);
+}
+ConfigDA.prototype.admin_team_treasure_delete = function (data, callback) {
+    return this.dbModel.query_callback_object("call admin_team_treasure_delete(?,?)", [
+        data.admin_id || 0,
+        data.event_id
+    ], callback);
+}
+ConfigDA.prototype.team_treasure_insert_test_data = function (data, callback) {
+    return this.dbModel.query_callback_object("call team_treasure_insert_test_data(?,?,?)", [
+        data.event_id,
+        data.league_id,
+        data.user_id
+    ], callback);
+}
+ConfigDA.prototype.team_treasure_insert_test_data_me = function (data, callback) {
+    return this.dbModel.query_callback_object("call team_treasure_insert_test_data_me(?,?,?,?)", [
+        data.event_id,
+        data.league_id,
+        data.user_id,
+        data.score
+    ], callback);
+}
+ConfigDA.prototype.team_treasure_add_team_score = function (data, callback) {
+    try {
+        this.dbModel.query_callback_object("call team_treasure_add_nout(?,?,?,?)", [
+            data.user_id,
+            data.event_id,
+            data.team_id,
+            data.score
+        ], function (err, result) {
+            if (err) {
+                console.error("team_treasure_add_team_score error:", err);
+                return callback({ status: 1, msg: "error: " + err });
+            }
+            return callback(data, { status: 0, msg: "OK" });
+        });
+    } catch (error) {
+        console.error("team_treasure_add_team_score error:", error);
+        return callback({ status: 1, msg: "error: " + error });
+    }
+};
