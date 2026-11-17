@@ -6,11 +6,11 @@
 var app_config = {};
 
 app_config.mySQLConfig = {
-    host: '14.225.3.172',
+    host: 'localhost',
     port: 3306,
     user: 'root',
-    password: 'CookingCrush123$5',
-    database:'Cooking_publish',
+    password: 'jEW9^Au@X_;[Qc{!Br}V)w',
+    database:'Kitchen_Craze_Live_001',
     charset : 'utf8mb4_general_ci',
     waitForConnections : true,  // Determines the pool's action when no connections are available and the limit has been reached. If true, the pool will queue the connection request and call it when one becomes available. If false, the pool will immediately call back with an error. (Default: true)
     queueLimit :0, //The maximum number of connection requests the pool will queue before returning an error from
@@ -28,10 +28,10 @@ app_config.system_config = {
 }
 
 app_config.option_clearCache = {
-    url: 'https://apiccrdev.flowmotionentertainment.com/apix/clear_all_cache',
+    url: 'https://apicookingpublishdev.flowmotionentertainment.com/apix/clear_all_cache',
     json: true,
 }
-app_config.app_config_urlServer = 'https://apiccrdev.flowmotionentertainment.com';
+app_config.app_config_urlServer = 'https://apicookingpublishdev.flowmotionentertainment.com';
 app_config.secret_key = 'c00K_crush@007';
 app_config.apm={
     serviceName: 'APM-CMS-Crush',

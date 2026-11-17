@@ -83,4 +83,8 @@ TeamDA.prototype.update_team_score_by_event = function (data, callback) {
     ], callback);
 }
 /** end for team leaderboard */
+TeamDA.prototype.list_verify_iap_log = function (data, callback) {
+    console.log("data call ", data);
+    return this.dbModel.query_callback_array("call admin_list_verify_iap_log(?,?,?,?,?)", [data.user_id,data.start_time,data.end_time,data.page_size,data.page], callback);
+}
 module.exports = TeamDA;

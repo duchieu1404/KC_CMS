@@ -479,7 +479,7 @@
               </div>
               <label class="control-label col-md-2 col-sm-3 col-xs-4">Send With Name</label>
                 <div class="col-md-4 col-sm-9 col-xs-12">
-                  <input  class="form-control col-md-5 col-xs-10" required="required" type="text" id = "edt_email_send_name" name="edt_email_send_name" value="Cooking Time">
+                  <input  class="form-control col-md-5 col-xs-10" required="required" type="text" id = "edt_email_send_name" name="edt_email_send_name" value="Kitchen Craze">
                 </div>
               
             </div>
@@ -643,41 +643,44 @@
                   <tbody>
 
                   <% var list_rest = [
-                    {"id":1,"name":"French Toast", "level" : 20},
-                    {"id":4,"name":"Dream Deli", "level" : 40},
-                    {"id":6,"name":"Salty Taverna (SeaFood)", "level" : 40},
-                    {"id":8,"name":"Party Parlor (IceCream)", "level" : 40},
-                    {"id":2,"name":"Rockin' Diner (Burger)", "level" : 40},
-                    {"id":7,"name":"Crazy Cantina (Mexican)", "level" : 40},
-                    {"id":10,"name":"Donut Den (Donut)", "level" : 40},
-                    {"id":11,"name":"Indian", "level" : 40}, 
-                    {"id":9,"name":"Pizza", "level" : 40},
-                    {"id":3,"name":"CakeShop", "level" : 40},
-                    {"id":12,"name":"Canadian Treats", "level" : 40},
-                    {"id":13,"name":"What The Pho", "level" : 40},
-                    {"id":14,"name":"Peru", "level" : 40},
-                    {"id":15,"name":"Turkish", "level" : 40},
-                    {"id":16,"name":"Jungle", "level" : 40},
-                    {"id":17,"name":"Iceland", "level" : 40},
-                    {"id":18,"name":"UK (English Breakfast)", "level" : 40},
-                    {"id":19,"name":"Egypt (Egyptian Princess)", "level" : 40},
-                    {"id":20,"name":"Hospital (Hospital Care)", "level" : 40},
-                    {"id":21,"name":"Russian (Creamy Borsh)", "level" : 40},
-                    {"id":22,"name":"Japan (Sushi Bar)", "level" : 40},
-                    {"id":23,"name":"Pirates (Pirateâ€™s Treasure)", "level" : 40},
-                    {"id":24,"name":"AirPlane (Flying Away)", "level" : 40},
-                    {"id":25,"name":"Jamaica (Jamaican Smile)", "level" : 40},
-                    {"id":26,"name":"Prison Break","level":40},
-                    {"id":27,"name":"Brazil (Coffee House)","level":40},
-                    {"id":28,"name":"Hola Spain","level":40},
-                    {"id":29,"name":"Champion's Meal","level":40},
-                    {"id":30,"name":"Candy","level":40},
-                    {"id":31,"name":"Chinatown","level":40},
-                    {"id":32,"name":"Deutch Delights","level":40},
-                    {"id":33,"name":"Persian","level":40},
-                    {"id":34,"name":"Sugar Swirl","level":40}
-                  ];
-
+  {"id":1, "name":"Donut", "level":30},
+  {"id":6, "name":"Seafood", "level":50},
+  {"id":7, "name":"Mexico", "level":120},
+  {"id":9, "name":"Pizza", "level":120},
+  {"id":8, "name":"Rich & Creamy", "level":120},
+  {"id":11, "name":"Spicy Kebob", "level":120},
+  {"id":4, "name":"Deli", "level":120},
+  {"id":3, "name":"Cake", "level":120},
+  {"id":2, "name":"Rockin' Diner", "level":120},
+  {"id":32,"name":"Deutsch Delights","level":120},
+  {"id":34, "name":"Sugar Swirl", "level":120},
+  {"id":31, "name":"China Town", "level":120},
+  {"id":33, "name":"Persion Palace", "level":120},
+  {"id":29, "name":"Champions Arena", "level":120},
+  {"id":23, "name":"Pirate’s Treasure", "level":120},
+  {"id":27, "name":"Coffee House", "level":120},
+  {"id":28, "name":"Hola Spain", "level":120},
+  {"id":26, "name":"Prison Break", "level":120},
+  {"id":25, "name":"Jamaican Smile", "level":120},
+  {"id":24, "name":"Flying Away", "level":120},
+  {"id":22, "name":"Sushi Bar", "level":120},
+  {"id":21, "name":"Creamy Borsh", "level":120},
+  {"id":13, "name":"Pho", "level":120},
+  {"id":20, "name":"Hospital Care", "level":120},
+  {"id":19, "name":"Egyptian Princess", "level":120},
+  {"id":18, "name":"English Breakfast", "level":120},
+  {"id":17, "name":"Icelandic Infusion", "level":120},
+  {"id":16, "name":"Up In The Sky", "level":120},
+  {"id":15, "name":"Turkish Authentic", "level":120},
+  {"id":14, "name":"El Placer", "level":120},
+  {"id":12, "name":"Canadian Treats", "level":120},
+  {"id":30, "name":"Candy Shop", "level":120},
+  {"id":36, "name":"Banana Dream", "level":120},
+  {"id":35, "name":"Korean Bubbels", "level":120},
+  {"id":37, "name":"Steak House", "level":120},
+  {"id":38, "name":"Ausement Park", "level":120},
+  {"id":39, "name":"Tiki Table", "level":120}
+];
                   list_rest.forEach(function(restInfo) {
                   %>
                     <tr>
@@ -793,6 +796,7 @@
          
             <div class="modal-footer">
               <input type="button" class="btn btn-default" data-dismiss="modal" value="Close">
+	      <input type="button" class="btn btn-primary" value="Insert Force" id="btnInsertForce" onclick="insertTestValues()" style="display: none;">
               <input type="button" class="btn btn-primary" value="Send" onclick="btnDoSendEmail()">
             </div>
           </form>
@@ -1010,6 +1014,15 @@
       $('#check_PN').show();
     }
     $("label.error").hide();
+    let selectedValue = document.getElementById("edt_MessageType").value;
+    let btnInsertForce = document.getElementById("btnInsertForce");
+
+    if (selectedValue == "3") {
+        btnInsertForce.style.display = "inline-block"; // Hi?n th? nút Insert Force
+    } else {
+        btnInsertForce.style.display = "none"; // ?n nút Insert Force
+    }
+
   }
 
   emailTypeChanged();
@@ -1046,6 +1059,16 @@
       });
     });
     
+    var insertTestValues = function() {
+        for(var i = 1; i<=100; i++){
+          $("#edt_email_key_"+i).val([1].includes(i) ? 30 : i == 6 ? 50 : i == 7 ? 80 : 120);
+          $("#edt_email_levels_"+i).val([1].includes(i) ? 30 : i == 6 ? 50 : i == 7 ? 80 : 120);
+          $("#edt_email_tier_"+i).val(1);
+          $("#edt_email_unlock_state_"+i).val(1);
+          
+        }
+    }
+
     var btnDoSendEmail = function()
     {
      let is_valid =  validateModel.formEmail("#demo-form2");

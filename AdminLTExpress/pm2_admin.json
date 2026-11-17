@@ -1,12 +1,13 @@
 {
   "apps" : [{
-    "name"        : "Cooking_Publish_CMS_Admin_6003",
+    "name"        : "KC_CMS_Admin_Live_001_8076",
     "script"      : "bin/www",
     "args"        : [],
     "node_args"   : "--harmony --nouse-idle-notification --expose-gc",
     "merge_logs"  : true,
     "env": {
-      "NODE_ENV": "production"
+      "NODE_ENV": "production",
+	"PORT":8076
     }
   }]
 }
