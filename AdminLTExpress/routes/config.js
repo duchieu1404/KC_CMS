@@ -487,6 +487,89 @@ router.post('/event_1hour_insert_test_data', function (req, res) {
     });
 });
 
+/* Event combo rush */
+
+router.get('/event_combo_rush', function (req, res) {
+    req.app.ConfigDA.admin_event_combo_rush_get_all({}, function admin_event_combo_rush_get_all(err, dataX) {
+        if (err || !dataX) {
+            return res.render('config/event_combo_rush', { dataConfigs: [] });
+        }
+        return res.render('config/event_combo_rush', { dataConfigs: dataX });
+    });
+});
+
+router.post('/event_combo_rush', function (req, res) {
+    req.app.ConfigDA.admin_event_combo_rush_save({
+        status: req.body.edt_status,
+        id: req.body.edt_id,
+        time_from: req.body.edt_time_from,
+        time_to: req.body.edt_time_to,
+        member: req.body.edt_member, 
+        time_bot_join: req.body.edt_time_bot_join, 
+        time_end_group: req.body.edt_time_end_group, 
+        time_show_from: req.body.edt_time_show_from,
+        time_show_to: req.body.edt_time_show_to
+        
+    }, function (errSave, dataSave) {
+        /**clear cache  */
+        request.post(app_configs.option_clearCache, (err, res, body) => {
+            if (err) {
+              return console.log(err)
+            }
+            console.log(`Clear cache all successfully for request event_combo_rush in CMS Status: ${res.statusCode} ` );
+          })
+          
+        return res.redirect('/config/event_combo_rush');
+    });
+});
+
+
+router.post('/event_combo_rush_delete', function (req, res) {
+    req.app.ConfigDA.admin_event_combo_rush_delete({}, function admin_ct_get_all(err, dataX) {
+        req.app.ConfigDA.admin_event_combo_rush_delete({
+            event_id: req.body.delete_edt_Id
+        }, function (err, data) {
+            return res.send(data || { status: 1, msg: "err" });
+        });
+    });
+});
+
+router.post('/event_combo_rush_add_score', function (req, res) {
+    req.app.ConfigDA.admin_event_combo_rush_add_score({}, function admin_event_combo_rush_add_score(err, dataX) {
+
+        var json = [];
+
+        if (!req.body.edt_event_id || !req.body.edt_score) {
+            return;
+        }
+        list_score =
+        {
+            "event_id": req.body.edt_event_id,
+            "score": parseInt(req.body.edt_score)
+        }
+        json.push(list_score);
+        req.app.ConfigDA.admin_event_combo_rush_add_score({
+            user_id: req.body.edt_user_id,
+            list_score: JSON.stringify(list_score)
+        }, function (err, data) {
+            return res.send(data || { status: 1, msg: "err" });
+        });
+    });
+});
+
+router.post('/event_combo_rush_insert_test_data', function (req, res) {
+    req.app.ConfigDA.admin_event_combo_rush_insert_test_data({}, function admin_event_combo_rush_insert_test_data(err, dataX) {
+        req.app.ConfigDA.admin_event_combo_rush_insert_test_data({
+            event_id: req.body.edt_event_id,
+            total_user_id: req.body.edt_total_user_id
+        }, function (err, data) {
+            return res.send(data || { status: 1, msg: "err" });
+        });
+    });
+});
+
+
+
 
 
 
@@ -884,5 +967,197 @@ router.post('/event_gcc_get_leaderboard', function (req, res) {
         });
     });
 });
+router.get('/event_lava_quest', function (req, res) {
+    req.app.ConfigDA.admin_event_lava_quest_get_all({}, function admin_event_lava_quest_get_all(err, dataX) {
+        if (err || !dataX) {
+            return res.render('config/event_lava_quest', { dataConfigs: [] });
+        }
+        return res.render('config/event_lava_quest', { dataConfigs: dataX });
+    });
+});
 
+// royal pass event 
+
+router.get('/event_royal_pass', function (req, res) {
+    req.app.ConfigDA.admin_event_royal_pass_get_all({}, function admin_event_royal_pass_get_all(err, dataX) {
+        if (err || !dataX) {
+            return res.render('config/event_royal_pass', { dataConfigs: [] });
+        }
+        return res.render('config/event_royal_pass', { dataConfigs: dataX });
+    });
+});
+
+router.post('/event_royal_pass', function (req, res) {
+    req.app.ConfigDA.admin_royal_pass_save({
+        id: req.body.edt_id,
+        status: req.body.edt_status,
+        time_from: req.body.edt_time_from,
+        time_to: req.body.edt_time_to,
+        time_show_from: req.body.edt_time_show_from,
+        time_show_to: req.body.edt_time_show_to,
+        key_bundle: req.body.edt_key_bundle,
+        user_ids: req.body.edt_user_ids,
+        version: req.body.edt_version,
+    }, function (errSave, dataSave) {
+        /**clear cache  */
+        request.post(app_configs.option_clearCache, (err, res, body) => {
+            if (err) {
+              return console.log(err)
+            }
+            console.log(`Clear cache all successfully for request event_royal_pass in CMS Status: ${res.statusCode} ` );
+          })
+          
+        return res.redirect('/config/event_royal_pass');
+    });
+});
+
+
+router.post('/event_royal_pass_delete', function (req, res) {
+    // ko hi?u sao ch? này call 2 l?n ?
+    req.app.ConfigDA.admin_royal_pass_delete({}, function admin_royal_pass_delete(err, dataX) {
+        req.app.ConfigDA.admin_royal_pass_delete({
+            event_id: req.body.delete_edt_Id
+        }, function (err, data) {
+            return res.send(data || { status: 1, msg: "err" });
+        });
+    });
+});
+
+router.post('/change_log_event_royal_pass', function (req, res) {
+    
+    let search_form = {
+        user_id: req.body.searchUserId,
+        start_time: req.body.searchStartTime ? req.body.searchStartTime + " 00:00:00"   : new Date(),
+        end_time : req.body.searchEndTime ? req.body.searchEndTime + " 23:59:00" : new Date(),
+        start_time_inp: req.body.searchStartTime ? req.body.searchStartTime  : new Date(),
+        end_time_inp : req.body.searchEndTime ? req.body.searchEndTime : new Date(),
+        page_size: req.body.searchPageSize ? req.body.searchPageSize : 10,
+        page: req.body.page || 0
+    }
+
+    req.app.ConfigDA.list_change_logs(search_form, function (err, data) { 
+        return res.render('config/change_log_event_royal_pass', { search_form: search_form, listChangeLogs: data || [] });
+    });
+});
+router.get('/change_log_event_royal_pass', function (req, res) {
+    return res.render('config/change_log_event_royal_pass', {search_form: {}, listChangeLogs: []});
+});
+
+
+// event team treasure
+router.get('/event_team_treasure', function (req, res) {
+    req.app.ConfigDA.admin_team_treasure_get_all({}, function admin_team_treasure_get_all(err, dataX) {
+        console.log(err, dataX);
+        if (err || !dataX) {
+            return res.render('config/event_team_treasure', { dataConfigs: [] });
+        }
+        return res.render('config/event_team_treasure', { dataConfigs: dataX });
+    });
+});
+
+router.post('/event_team_treasure', function (req, res) {
+    req.app.ConfigDA.admin_team_treasure_save({
+        id: req.body.edt_id,
+        status: req.body.edt_status,
+        time_from: req.body.edt_time_from,
+        time_to: req.body.edt_time_to,
+        count_by: req.body.edt_count_by,
+        prev_event_id: req.body.edt_prev_event_id,
+        time_show_from: req.body.edt_time_show_from,
+        time_show_to: req.body.edt_time_show_to,
+        // evt_popup_copy: req.body.evt_popup_copy
+        edt_evt_copy: req.body.edt_evt_copy
+    }, function (errSave, dataSave) {
+        return res.redirect('/config/event_team_treasure');
+    });
+});
+
+
+router.post('/event_team_treasure_delete', function (req, res) {
+    req.app.ConfigDA.admin_team_treasure_delete({}, function admin_team_treasure_delete(err, dataX) {
+        req.app.ConfigDA.admin_team_treasure_delete({
+            event_id: req.body.delete_edt_Id
+        }, function (err, data) {
+            return res.send(data || { status: 1, msg: "err" });
+        });
+    });
+});
+
+
+router.post('/event_team_treasure_insert_test_data', function (req, res) {
+    req.app.ConfigDA.team_treasure_insert_test_data({}, function team_treasure_insert_test_data(err, dataX) {
+        req.app.ConfigDA.team_treasure_insert_test_data(
+            {
+                event_id: req.body.edt_event_id,
+                league_id : req.body.edt_league_id,
+                user_id : req.body.edt_user_id
+            }, function (err, data) {
+                return res.send(data || { status: 1, msg: "err" });
+            });
+    });
+});
+
+router.post('/event_team_treasure_insert_test_data_me', function (req, res) {
+    req.app.ConfigDA.team_treasure_insert_test_data_me({}, function team_treasure_insert_test_data(err, dataX) {
+        req.app.ConfigDA.team_treasure_insert_test_data_me(
+            {
+                event_id: req.body.edt_event_id,
+                league_id : req.body.edt_league_id,
+                user_id : req.body.edt_user_id,
+                score : req.body.edt_score
+            }, function (err, data) {
+                return res.send(data || { status: 1, msg: "err" });
+            });
+    });
+});
+
+
+router.post('/event_team_treasure_add_team_score', function (req, res) {
+    console.log("request event_team_treasure_add_team_score =",req.body);
+    req.app.ConfigDA.team_treasure_add_team_score(
+        {
+            event_id: req.body.edt_event_id,
+            user_id : req.body.edt_user_id,
+            score : req.body.edt_score,
+            team_id :req.body.edt_team_id
+        }, function (err, data) {
+            console.log("result event_team_treasure_add_team_score data="+ JSON.stringify(data));
+            return res.send(data || { status: 1, msg: "err" });
+        });
+});
+
+router.post('/event_lava_quest', function (req, res) {
+    req.app.ConfigDA.admin_lava_quest_save({
+        id: req.body.edt_id,
+        status: req.body.edt_status,
+        time_from: req.body.edt_time_from,
+        time_to: req.body.edt_time_to,
+        time_show_from: req.body.edt_time_show_from,
+        time_show_to: req.body.edt_time_show_to,
+        key_bundle: req.body.edt_key_bundle,
+        user_ids: req.body.edt_user_ids,
+        version: req.body.edt_version,
+    }, function (errSave, dataSave) {
+        /**clear cache  */
+        request.post(app_configs.option_clearCache, (err, res, body) => {
+            if (err) {
+              return console.log(err)
+            }
+            console.log(`Clear cache all successfully for request event_lava_quest in CMS Status: ${res.statusCode} ` );
+          })
+          
+        return res.redirect('/config/event_lava_quest');
+    });
+});
+
+
+router.post('/event_lava_quest_delete', function (req, res) {
+    req.app.ConfigDA.admin_lava_quest_delete({}, function admin_lava_quest_delete(err, dataX) {
+        req.app.ConfigDA.admin_lava_quest_delete({
+            event_id: req.body.delete_edt_Id
+        }, function (err, data) {
+            return res.send(data || { status: 1, msg: "err" });
+        });
+    });
+});
 module.exports = router;

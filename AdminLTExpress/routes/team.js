@@ -91,4 +91,16 @@ router.post('/update_team_score_by_event', function (req, res) {
     });
 });
 /** end for team leaderboard */
+router.post('/update_team_score', function (req, res) {
+    console.log("request update_team_score data=" + JSON.stringify(req.body));
+    // return res.send({ status: 0, msg: "OK" });
+    let params = {
+        team_id: req.body.edt_team_id,
+        score: req.body.edt_score
+    }
+
+    req.app.TeamDA.update_team_score(params, function (err, data) {
+        return res.send(data || { status: 1, msg: "err" });
+    });
+});
 module.exports = router;
