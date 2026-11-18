@@ -15,7 +15,7 @@ router.get('/',function(req, res) {
     });
 });
 
-router.get('/duplicate/:event_id',function(req, res){
+router.post('/duplicate/:event_id',function(req, res){
     req.DA.admin_event_duplicate({event_id:req.param('event_id')},function reload_list_events(err,dataX){
         if(err || !dataX)
         {
@@ -26,7 +26,7 @@ router.get('/duplicate/:event_id',function(req, res){
 });
 
 
-router.get('/delete/:event_id',function(req, res){
+router.post('/delete/:event_id',function(req, res){
     req.DA.admin_event_delete({event_id:req.param('event_id')},function reload_list_events(err,dataX){
         if(err || !dataX)
         {
@@ -153,4 +153,5 @@ router.post('/champion_tournament_history', function (req, res) {
     //     return res.render('iap/iap_history', { search_form: search_form, listIapHistorys: data || [] });
     // });
 });
+require('../module/event_approval').protect(router, 'events', require('../module/event_approval').protectedEvent);
 module.exports = router;
