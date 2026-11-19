@@ -76,7 +76,9 @@ const eventMenuNames = {
     event_champion_tournament: 'Event Champion Tournament', event_kr: 'Event Kitchen Rival',
     event_1vs1: 'Event Race 1 vs 1', event_top_secret_meal: 'Event top secret meal',
     event_1hour: 'Event Race 1 hour', event_combo_rush: 'Event Recipe Rumble',
-    event_team_quest: 'Event Team Treasure', event_world_tour: 'Event World Tour',
+    event_team_quest: 'Event Team Quest', 
+    event_team_treasure: 'Event Team Treasure', 
+    event_world_tour: 'Event World Tour',
     event_lava_quest: 'Event Lava Quest', event_royal_pass: 'Event Royal Pass',
     event_rainbow_lollipop: 'Event Rainbow Lollipop'
 };
