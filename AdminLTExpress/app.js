@@ -116,6 +116,9 @@ app.use(require('less-middleware')(path.join(__dirname, 'public')));
 // Add the Elastic APM middleware after your regular middleware
 // app.use(apm.middleware.connect())
 
+app.use(require('./module/event_approval').locals);
+app.use('/approvals', require('./module/event_approval').router());
+require('./module/event_approval').protect(configRouter, 'config', require('./module/event_approval').protectedConfig);
 
 app.use('/', routes);
 app.use('/users', users);
