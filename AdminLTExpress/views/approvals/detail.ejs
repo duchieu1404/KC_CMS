@@ -1,0 +1,26 @@
+<% include ../partial/admin_header.ejs %>
+<section class="content-header"><h1>Event request #<%= request.id %></h1></section>
+<section class="content">
+<p><a href="/approvals">All requests</a></p>
+<p>Status: <strong><%= request.status %></strong></p>
+<p>Action: <%= request.action_key %></p>
+<p>Requester ID: <%= request.requested_by %>; Reviewer ID: <%= request.reviewed_by || '' %></p>
+<p>Reason: <%= request.reason %></p>
+<p>Review note: <%= request.review_note || '' %></p>
+<p>Error: <%= request.error_message || '' %></p>
+<h3>Submitted values (immutable)</h3><pre><%= JSON.stringify(payload, null, 2) %></pre>
+<p>Review these submitted values against the current event before approving. Execution uses the submitted values.</p>
+<% if (eventApprovalAdmin && request.status === 'pending') { %>
+<form method="post" action="/approvals/<%= request.id %>/approve">
+<input type="hidden" name="_event_csrf" value="<%= eventApprovalToken %>">
+<label>Review note <textarea class="form-control" name="note" maxlength="2000"></textarea></label><br>
+<button class="btn btn-success" type="submit" onclick="return confirm('Approve and execute these exact values?')">Approve and execute</button>
+<button class="btn btn-danger" type="submit" formaction="/approvals/<%= request.id %>/reject">Reject</button>
+</form>
+<% } %>
+<% if (request.status === 'executing' || request.status === 'needs_review') { %>
+<p class="alert alert-warning">Do not resubmit automatically. An administrator must inspect database results; execution may have partially completed.</p>
+<% } %>
+<pre><%= request.result_json || '' %></pre>
+</section>
+<% include ../partial/admin_footer.ejs %>

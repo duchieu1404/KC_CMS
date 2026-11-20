@@ -145,7 +145,55 @@
         margin: 0 auto;
     }
 </style>
-
+<script>
+(function () {
+    var csrf = '<%= locals.eventApprovalToken || "" %>';
+    var fullAccessHint = <%= locals.eventApprovalAdmin ? 'true' : 'false' %>;
+    function protectedEvent(url, method) {
+        var p = new URL(url, location.href);
+        if (p.origin !== location.origin) return false;
+        return method.toUpperCase() === 'POST' && ((/^\/config\/(event_|delete_event_popup)/.test(p.pathname) && p.pathname !== '/config/event_gcc_get_leaderboard') || /^\/(admin\/events|event)\/(events|duplicate\/[^/]+|delete\/[^/]+|update_user_score_by_event)$/.test(p.pathname));
+    }
+    document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!protectedEvent(form.action, form.method)) return;
+        var field = form.querySelector('[name="_event_csrf"]');
+        if (!field) { field = document.createElement('input'); field.type = 'hidden'; field.name = '_event_csrf'; form.appendChild(field); }
+        field.value = csrf;
+    }, true);
+    function setupAjax() {
+        if (!window.jQuery) return setTimeout(setupAjax, 100);
+        $.ajaxPrefilter(function (options, original, xhr) {
+            if (!protectedEvent(options.url, options.type || 'GET')) return;
+            xhr.setRequestHeader('X-Event-CSRF', csrf);
+            var reason = fullAccessHint ? 'Admin event change' : window.prompt('Reason for event change (required for QA/dev):', 'Event change');
+            if (reason === null) { xhr.abort(); return; }
+            options.data = (options.data ? options.data + '&' : '') + '_approval_reason=' + encodeURIComponent(reason);
+            var success = options.success;
+            options.success = function (data) { if (data && data.pending) { alert(data.msg); return; } if (success) return success.apply(this, arguments); };
+        });
+    }
+    document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!protectedEvent(form.action, form.method)) return;
+        var reason = form.querySelector('[name="_approval_reason"]');
+        if (!reason) { reason = document.createElement('input'); reason.type = 'hidden'; reason.name = '_approval_reason'; form.appendChild(reason); }
+        var text = fullAccessHint ? 'Admin event change' : window.prompt('Reason for event change (required for QA/dev):', 'Event change');
+        if (text === null) { e.preventDefault(); e.stopImmediatePropagation(); return; }
+        reason.value = text;
+    }, true);
+    document.addEventListener('click', function(e) {
+        var link = e.target.closest('a'); if (!link) return;
+        var url = new URL(link.href, location.href);
+        if (url.origin !== location.origin || !/^\/(admin\/events|event)\/(duplicate|delete)\/[^/]+$/.test(url.pathname)) return;
+        e.preventDefault();
+        var form = document.createElement('form'); form.method = 'post'; form.action = url.pathname;
+        document.body.appendChild(form);
+        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })) && form.submit();
+    });
+    setupAjax();
+}());
+</script>
 </head>
 <body class="skin-blue">
 <!-- header logo: style can be found in header.less-->
@@ -199,6 +247,7 @@
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less-->
             <ul class="sidebar-menu">
+<li><a href="/approvals"><i class="fa fa-check"></i>Event requests / Approvals</a></li>
                 <!--<li><a href="index.html"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>-->
                 <!--<li class="treeview"><a href="#"><i class="fa fa-laptop"></i><span>Logs</span><i class="fa fa-angle-left pull-right"></i></a>-->
                     <!--<ul class="treeview-menu">-->
